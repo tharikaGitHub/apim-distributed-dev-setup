@@ -23,7 +23,7 @@ wait_for_service_start() {
     local check_port=$((base_port + port_offset))
     
     echo "Waiting for $service_name to start..."
-    local max_retries=30
+    local max_retries=60
     local counter=0
     while [ $counter -lt $max_retries ]; do
         if curl --silent --fail http://localhost:$check_port/services/Version > /dev/null; then
@@ -92,6 +92,8 @@ cp -v ./lib/mysql-connector-j-8.4.0.jar ./components/wso2am-universal-gw/reposit
 print_title "Starting docker containers"
 docker-compose up -d
 
+sleep 10
+
 # Wait for mysql to start
 echo "Waiting for mysql to start..."
 docker-compose exec mysql mysqladmin --silent --wait=30 -uroot -proot ping
@@ -103,7 +105,9 @@ fi
 # Seed database if seed flag is set
 if [ "$SEED" = "seed" ] && [ "$CMD" != "stop" ]; then
     print_title "Seeding database"
+    sleep 10
     docker-compose exec mysql mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -e "USE $WSO2AM_SHARED_DB; source /home/dbScripts/mysql.sql"
+    sleep 10
     docker-compose exec mysql mysql -u$MYSQL_USER -p$MYSQL_PASSWORD -e "USE $WSO2AM_DB; source /home/dbScripts/apimgt/mysql.sql"
 fi
 
