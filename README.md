@@ -66,3 +66,4 @@ To update any configuration files in the `conf/repository` directory of the pack
     ps -ef | grep 'wso2' | grep -v grep | awk '{print $2}' | xargs -r kill -9
     ```
 - If you encounter a database issue, retry the operation. 
+- If you see an error in starting up the servers when the script runs because of exceeding the retry count, wait for some time and try accessing the APIM server urls. This is because the servers could be taking more time to start than ususal in your machine. You can check the logs from the `/logs` directory in the cloned repo to make sure the servers have started.
